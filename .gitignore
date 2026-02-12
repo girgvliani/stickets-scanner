@@ -1,0 +1,10 @@
+/nodemodules
+
+node_modules/
+next/
+.env.local
+.next/
+node_modules/
+next-env.d.ts
+tsconfig.tsbuildinfo
+env.example

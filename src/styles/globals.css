@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #FF4500;
+  --color-primary-hover: #FF5500;
+  --color-text-primary: #1B1B3C;
+  --color-text-secondary: #666666;
+  --color-background: #ffffff;
+  --color-background-light: #F3F4F6;
+  --color-border: #e6e6e6;
+  --color-danger: #DC2626;
+  --color-white: #ffffff;
+
+  /* Scanner-specific colors */
+  --color-success: #22C55E;
+  --color-success-light: #DCFCE7;
+  --color-warning: #F59E0B;
+  --color-warning-light: #FEF3C7;
+  --color-error: #DC2626;
+  --color-error-light: #FEE2E2;
+  --color-info: #3B82F6;
+  --color-info-light: #DBEAFE;
+  --color-wrong: #F97316;
+  --color-wrong-light: #FFF7ED;
+}
+
+@theme {
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-background: var(--color-background);
+  --color-background-light: var(--color-background-light);
+  --color-border: var(--color-border);
+  --color-danger: var(--color-danger);
+  --color-success: var(--color-success);
+  --color-success-light: var(--color-success-light);
+  --color-warning: var(--color-warning);
+  --color-warning-light: var(--color-warning-light);
+  --color-error: var(--color-error);
+  --color-error-light: var(--color-error-light);
+  --color-info: var(--color-info);
+  --color-info-light: var(--color-info-light);
+  --color-wrong: var(--color-wrong);
+  --color-wrong-light: var(--color-wrong-light);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* PWA standalone mode adjustments */
+@media all and (display-mode: standalone) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Hide scrollbar for scanner view */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
