@@ -8,11 +8,21 @@ import {
 } from "lucide-react";
 import type { ScanResult } from "@/types/scanner.types";
 import { cn } from "@/lib/cn";
+import { Text } from "@/components/ui/text";
+import { TagPill } from "@/components/ui/pill";
+import Button from "@/components/ui/button";
 
 interface ScanResultProps {
   result: ScanResult;
   onDismiss: () => void;
 }
+
+const resultVariantMap = {
+  success: "success",
+  already_used: "warning",
+  wrong_scanner: "error",
+  invalid: "error",
+} as const;
 
 const ScanResultComponent = ({ result, onDismiss }: ScanResultProps) => {
   return (
@@ -45,10 +55,16 @@ const ScanResultComponent = ({ result, onDismiss }: ScanResultProps) => {
         {/* Icon + Status */}
         <div className="mb-3 flex items-center gap-3">
           <ResultIcon result={result.result} />
-          <div>
-            <h3 className="text-lg font-bold text-text-primary">
+          <div className="flex flex-col gap-1">
+            <Text variant="h5">
               <ResultTitle result={result.result} />
-            </h3>
+            </Text>
+            <TagPill
+              tag={result.result.replace("_", " ")}
+              variant={resultVariantMap[result.result]}
+              size="xs"
+              showDot
+            />
           </div>
         </div>
 
@@ -78,24 +94,28 @@ const ScanResultComponent = ({ result, onDismiss }: ScanResultProps) => {
           {result.result === "wrong_scanner" && (
             <>
               <DetailRow label="Ticket" value={result.ticketTypeName} />
-              <p className="mt-2 text-sm text-text-secondary">
+              <Text variant="p2" color="secondary" className="mt-2">
                 This ticket is assigned to a different entrance.
-              </p>
+              </Text>
             </>
           )}
 
           {result.result === "invalid" && (
-            <p className="text-sm text-text-secondary">{result.reason}</p>
+            <Text variant="p2" color="secondary">
+              {result.reason}
+            </Text>
           )}
         </div>
 
         {/* Tap to dismiss */}
-        <button
+        <Button
+          variant="secondary"
+          size="md"
           onClick={onDismiss}
-          className="mt-4 w-full rounded-xl bg-background-light py-2.5 text-sm font-medium text-text-secondary transition-colors active:bg-border"
+          className="mt-4 w-full"
         >
           Tap to scan next
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -131,8 +151,8 @@ function ResultTitle({ result }: { result: ScanResult["result"] }) {
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-sm text-text-secondary">{label}</span>
-      <span className="text-sm font-medium text-text-primary">{value}</span>
+      <Text variant="p2" color="secondary">{label}</Text>
+      <Text variant="span2">{value}</Text>
     </div>
   );
 }

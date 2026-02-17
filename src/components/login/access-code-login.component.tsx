@@ -1,84 +1,49 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { KeyRound } from "lucide-react";
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth.store";
 import type { LoginResponse } from "@/types/scanner.types";
 import Button from "@/components/ui/button";
+import Input from "@/components/ui/input";
+import { Text } from "@/components/ui/text";
 
 const CODE_LENGTH = 8;
 
 const AccessCodeLoginComponent = () => {
   const router = useRouter();
   const login = useAuthStore((s) => s.login);
-  const [code, setCode] = useState<string[]>(Array(CODE_LENGTH).fill(""));
+  const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const setInputRef = useCallback(
-    (index: number) => (el: HTMLInputElement | null) => {
-      inputRefs.current[index] = el;
-    },
-    []
-  );
+  const formatCode = (raw: string): string => {
+    const clean = raw.replace(/[^a-zA-Z0-9]/g, "").toUpperCase().slice(0, CODE_LENGTH);
+    if (clean.length > 4) {
+      return clean.slice(0, 4) + "-" + clean.slice(4);
+    }
+    return clean;
+  };
 
-  const handleChange = (index: number, value: string) => {
-    if (!/^[a-zA-Z0-9]?$/.test(value)) return;
-
-    const newCode = [...code];
-    newCode[index] = value.toUpperCase();
-    setCode(newCode);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    setCode(formatCode(raw));
     setError(null);
-
-    // Auto-focus next input
-    if (value && index < CODE_LENGTH - 1) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleKeyDown = (
-    index: number,
-    e: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (e.key === "Backspace" && !code[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
-  };
-
-  const handlePaste = (e: React.ClipboardEvent) => {
-    e.preventDefault();
-    const pasted = e.clipboardData
-      .getData("text")
-      .replace(/[^a-zA-Z0-9]/g, "")
-      .toUpperCase()
-      .slice(0, CODE_LENGTH);
-
-    const newCode = [...code];
-    for (let i = 0; i < pasted.length; i++) {
-      newCode[i] = pasted[i];
-    }
-    setCode(newCode);
-
-    // Focus the next empty input or last filled
-    const nextEmpty = newCode.findIndex((c) => !c);
-    const focusIndex = nextEmpty === -1 ? CODE_LENGTH - 1 : nextEmpty;
-    inputRefs.current[focusIndex]?.focus();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    const accessCode =
-      code.slice(0, 4).join("") + "-" + code.slice(4).join("");
-
-    if (accessCode.replace("-", "").length !== CODE_LENGTH) {
-      setError("Please enter the full access code");
+    const rawCode = code.replace(/-/g, "");
+    if (rawCode.length !== CODE_LENGTH) {
+      setError("Please enter the full 8-character access code");
       return;
     }
 
+    const accessCode = rawCode.slice(0, 4) + "-" + rawCode.slice(4);
     setIsSubmitting(true);
 
     try {
@@ -104,46 +69,34 @@ const AccessCodeLoginComponent = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col items-center gap-6">
-      <p className="text-center text-sm text-text-secondary">
-        Enter the 8-character access code provided by the event organizer
-      </p>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <Input
+        placeholder="XXXX-XXXX"
+        value={code}
+        onChange={handleChange}
+        autoCapitalize="characters"
+        autoCorrect="off"
+        startContent={<KeyRound className="h-4 w-4 text-primary" />}
+      />
 
-      <div className="flex items-center gap-1.5">
-        {code.map((char, i) => (
-          <div key={i} className="flex items-center">
-            <input
-              ref={setInputRef(i)}
-              type="text"
-              inputMode="text"
-              maxLength={1}
-              value={char}
-              onChange={(e) => handleChange(i, e.target.value)}
-              onKeyDown={(e) => handleKeyDown(i, e)}
-              onPaste={i === 0 ? handlePaste : undefined}
-              className="h-12 w-10 rounded-lg border border-border bg-white text-center text-lg font-semibold text-text-primary outline-none transition-colors focus:border-primary"
-            />
-            {i === 3 && (
-              <span className="mx-1 text-lg font-bold text-text-secondary">
-                -
-              </span>
-            )}
-          </div>
-        ))}
-      </div>
+      <Text variant="p3" color="secondary">
+        Access codes are event specific and may expire.
+      </Text>
 
       {error && (
-        <p className="rounded-lg bg-error-light px-4 py-2.5 text-sm text-danger">
-          {error}
-        </p>
+        <div className="rounded-lg bg-error-light px-4 py-2.5">
+          <Text variant="p2" color="danger">
+            {error}
+          </Text>
+        </div>
       )}
 
       <Button
         type="submit"
         isLoading={isSubmitting}
-        className="w-full max-w-sm"
+        className="w-full"
       >
-        Connect
+        Enter Scanner
       </Button>
     </form>
   );

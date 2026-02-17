@@ -1,17 +1,38 @@
 @import "tailwindcss";
 
+/**
+ * Design System Foundation - Global CSS Variables
+ *
+ * Aligned with stickets-frontend design system.
+ * Values are defined in :root and then referenced in @theme to make them
+ * available as Tailwind utility classes.
+ */
+
 :root {
+  /* ============================================
+     COLOR TOKENS
+     ============================================ */
+
+  /* Brand Colors */
   --color-primary: #FF4500;
   --color-primary-hover: #FF5500;
+
+  /* Text Colors */
   --color-text-primary: #1B1B3C;
   --color-text-secondary: #666666;
+
+  /* Background Colors */
   --color-background: #ffffff;
   --color-background-light: #F3F4F6;
-  --color-border: #e6e6e6;
-  --color-danger: #DC2626;
-  --color-white: #ffffff;
 
-  /* Scanner-specific colors */
+  /* Border Colors */
+  --color-border: #e6e6e6;
+
+  /* Utility Colors */
+  --color-white: #ffffff;
+  --color-danger: #DC2626;
+
+  /* Scanner-specific status colors */
   --color-success: #22C55E;
   --color-success-light: #DCFCE7;
   --color-warning: #F59E0B;
@@ -22,9 +43,78 @@
   --color-info-light: #DBEAFE;
   --color-wrong: #F97316;
   --color-wrong-light: #FFF7ED;
+
+  /* ============================================
+     SPACING TOKENS
+     ============================================ */
+  --spacing-s-xs: 0.25rem;   /* 4px */
+  --spacing-s-sm: 0.5rem;    /* 8px */
+  --spacing-s-md: 1rem;      /* 16px */
+  --spacing-s-lg: 1.5rem;    /* 24px */
+  --spacing-s-xl: 2rem;      /* 32px */
+  --spacing-s-2xl: 3rem;     /* 48px */
+  --spacing-s-3xl: 4rem;     /* 64px */
+
+  /* ============================================
+     BORDER RADIUS TOKENS
+     ============================================ */
+  --radius-sm: 0.125rem;     /* 2px */
+  --radius-md: 0.375rem;     /* 6px */
+  --radius-lg: 0.5rem;       /* 8px */
+  --radius-xl: 0.75rem;      /* 12px */
+  --radius-full: 9999px;
+
+  /* ============================================
+     TYPOGRAPHY TOKENS
+     ============================================ */
+  --font-size-3xs: 0.5rem;    /* 8px */
+  --font-size-2xs: 0.625rem;  /* 10px */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.75rem;   /* 28px */
+  --font-size-4xl: 2rem;      /* 32px */
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* ============================================
+     SHADOW TOKENS
+     ============================================ */
+  --drop-shadow-peel: 0 0 20px rgba(255, 69, 0, 0.25);
+
+  /* ============================================
+     TRANSITION TOKENS
+     ============================================ */
+  --ease-peel: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes peel-pulse {
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 69, 0, 0.25)); }
+  50% { filter: drop-shadow(0 0 25px rgba(255, 69, 0, 0.5)); }
+}
+
+@keyframes bounce-custom {
+  0%, 100% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
 }
 
 @theme {
+  /* Color Tokens */
   --color-primary: var(--color-primary);
   --color-primary-hover: var(--color-primary-hover);
   --color-text-primary: var(--color-text-primary);
@@ -43,6 +133,39 @@
   --color-info-light: var(--color-info-light);
   --color-wrong: var(--color-wrong);
   --color-wrong-light: var(--color-wrong-light);
+
+  /* Spacing Tokens */
+  --spacing-s-xs: var(--spacing-s-xs);
+  --spacing-s-sm: var(--spacing-s-sm);
+  --spacing-s-md: var(--spacing-s-md);
+  --spacing-s-lg: var(--spacing-s-lg);
+  --spacing-s-xl: var(--spacing-s-xl);
+  --spacing-s-2xl: var(--spacing-s-2xl);
+  --spacing-s-3xl: var(--spacing-s-3xl);
+
+  /* Border Radius Tokens */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-full: var(--radius-full);
+
+  /* Typography Tokens */
+  --font-size-xs: var(--font-size-xs);
+  --font-size-sm: var(--font-size-sm);
+  --font-size-base: var(--font-size-base);
+  --font-size-lg: var(--font-size-lg);
+  --font-size-xl: var(--font-size-xl);
+
+  /* Shadow Tokens */
+  --drop-shadow-peel: var(--drop-shadow-peel);
+
+  /* Transition Tokens */
+  --ease-peel: var(--ease-peel);
+
+  /* Animation Tokens */
+  --animate-peel-pulse: peel-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-bounce-custom: bounce-custom 1s infinite;
 }
 
 * {

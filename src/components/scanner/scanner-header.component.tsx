@@ -3,6 +3,7 @@
 import { Settings } from "lucide-react";
 import Link from "next/link";
 import { useAuthStore } from "@/stores/auth.store";
+import { Text } from "@/components/ui/text";
 
 const ScannerHeaderComponent = () => {
   const scanner = useAuthStore((s) => s.scanner);
@@ -10,12 +11,12 @@ const ScannerHeaderComponent = () => {
   return (
     <header className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4 py-3 bg-gradient-to-b from-black/60 to-transparent">
       <div className="flex flex-col">
-        <span className="text-sm font-semibold text-white">
+        <Text variant="h7" color="white">
           {scanner?.scannerName || "Scanner"}
-        </span>
-        <span className="text-xs text-white/70">
+        </Text>
+        <Text variant="p3" className="text-white/70">
           Event #{scanner?.eventId}
-        </span>
+        </Text>
       </div>
       <Link
         href="/settings"

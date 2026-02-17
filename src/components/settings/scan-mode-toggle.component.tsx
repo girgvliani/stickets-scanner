@@ -3,6 +3,7 @@
 import { cn } from "@/lib/cn";
 import { useAuthStore } from "@/stores/auth.store";
 import type { ScanMode } from "@/types/scanner.types";
+import { Text } from "@/components/ui/text";
 
 const MODES: { value: ScanMode; label: string; description: string }[] = [
   {
@@ -28,7 +29,7 @@ const ScanModeToggleComponent = () => {
 
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-semibold text-text-primary">Scan Mode</h3>
+      <Text variant="h7">Scan Mode</Text>
       <div className="space-y-2">
         {MODES.map((mode) => (
           <button
@@ -54,12 +55,10 @@ const ScanModeToggleComponent = () => {
               )}
             </div>
             <div>
-              <p className="text-sm font-medium text-text-primary">
-                {mode.label}
-              </p>
-              <p className="text-xs text-text-secondary">
+              <Text variant="span2">{mode.label}</Text>
+              <Text variant="p3" color="secondary">
                 {mode.description}
-              </p>
+              </Text>
             </div>
           </button>
         ))}

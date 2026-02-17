@@ -10,6 +10,7 @@ import type {
   ScanResult,
   ScanResponse,
 } from "@/types/scanner.types";
+import Spinner from "@/components/ui/spinner";
 import ScanResultComponent from "./scan-result.component";
 import ScannerHeaderComponent from "./scanner-header.component";
 
@@ -134,7 +135,7 @@ const CameraScannerComponent = () => {
       {/* Processing Indicator */}
       {isProcessing && (
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/30">
-          <div className="h-12 w-12 animate-spin rounded-full border-4 border-white/30 border-t-white" />
+          <Spinner className="h-12 w-12 text-white" />
         </div>
       )}
 

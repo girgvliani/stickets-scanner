@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { User, Lock } from "lucide-react";
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth.store";
 import type { LoginResponse } from "@/types/scanner.types";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
+import { Text } from "@/components/ui/text";
 
 interface AccountFormData {
   username: string;
@@ -48,27 +50,33 @@ const AccountLoginComponent = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <Input
-        label="Username"
-        placeholder="Enter username"
+        placeholder="scanner_name"
         autoCapitalize="none"
         autoCorrect="off"
+        startContent={<User className="h-4 w-4 text-text-secondary" />}
         {...register("username", { required: true })}
       />
       <Input
-        label="Password"
         type="password"
-        placeholder="Enter password"
+        placeholder="Password"
+        startContent={<Lock className="h-4 w-4 text-text-secondary" />}
         {...register("password", { required: true })}
       />
 
+      <Text variant="p3" color="secondary">
+        This account is managed by the event organizer.
+      </Text>
+
       {error && (
-        <p className="rounded-lg bg-error-light px-4 py-2.5 text-sm text-danger">
-          {error}
-        </p>
+        <div className="rounded-lg bg-error-light px-4 py-2.5">
+          <Text variant="p2" color="danger">
+            {error}
+          </Text>
+        </div>
       )}
 
-      <Button type="submit" isLoading={isSubmitting} className="mt-2 w-full">
-        Sign In
+      <Button type="submit" isLoading={isSubmitting} className="w-full">
+        Log in & Open Scanner
       </Button>
     </form>
   );

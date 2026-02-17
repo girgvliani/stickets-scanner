@@ -4,6 +4,7 @@ import { ArrowLeft, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/auth.store";
 import Button from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
 import ScanModeToggleComponent from "./scan-mode-toggle.component";
 
 const SettingsPanelComponent = () => {
@@ -26,15 +27,15 @@ const SettingsPanelComponent = () => {
         >
           <ArrowLeft className="h-5 w-5 text-text-primary" />
         </button>
-        <h1 className="text-lg font-semibold text-text-primary">Settings</h1>
+        <Text variant="h5">Settings</Text>
       </header>
 
       <div className="space-y-4 p-4">
         {/* Scanner Info */}
         <div className="rounded-xl bg-white p-4 shadow-sm">
-          <h3 className="mb-3 text-sm font-semibold text-text-primary">
+          <Text variant="h7" className="mb-3">
             Scanner Info
-          </h3>
+          </Text>
           <div className="space-y-2">
             <InfoRow label="Name" value={scanner?.scannerName || "—"} />
             <InfoRow label="Event" value={`#${scanner?.eventId || "—"}`} />
@@ -79,8 +80,8 @@ const SettingsPanelComponent = () => {
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-sm text-text-secondary">{label}</span>
-      <span className="text-sm font-medium text-text-primary">{value}</span>
+      <Text variant="p2" color="secondary">{label}</Text>
+      <Text variant="span2">{value}</Text>
     </div>
   );
 }

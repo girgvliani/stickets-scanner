@@ -1,16 +1,37 @@
 import { cn } from "@/lib/cn";
-import { Loader2 } from "lucide-react";
 import type { ButtonHTMLAttributes, FC } from "react";
+import Spinner from "./spinner";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "ghost";
+  variant?: "primary" | "secondary" | "danger" | "ghost";
+  size?: "sm" | "md" | "lg";
   isLoading?: boolean;
+  loadingText?: string;
 }
+
+const variantClasses = {
+  primary:
+    "text-white bg-primary/50 hover:bg-primary/60 active:bg-primary/70 border-transparent",
+  secondary:
+    "bg-background-light text-text-primary hover:bg-border active:bg-border border-border",
+  danger:
+    "text-white bg-danger hover:bg-red-700 border-transparent",
+  ghost:
+    "bg-transparent text-text-secondary hover:bg-background-light border-transparent",
+};
+
+const sizeClasses = {
+  sm: "h-8 px-3 text-sm",
+  md: "h-9 px-4 text-sm",
+  lg: "h-10 px-6 text-base",
+};
 
 const Button: FC<ButtonProps> = ({
   children,
   variant = "primary",
+  size = "lg",
   isLoading = false,
+  loadingText,
   className,
   disabled,
   ...props
@@ -18,20 +39,22 @@ const Button: FC<ButtonProps> = ({
   return (
     <button
       className={cn(
-        "flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-semibold transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50",
-        variant === "primary" &&
-          "bg-primary text-white hover:bg-primary-hover active:bg-primary-hover",
-        variant === "secondary" &&
-          "bg-background-light text-text-primary hover:bg-border active:bg-border",
-        variant === "ghost" &&
-          "bg-transparent text-text-secondary hover:bg-background-light",
+        "flex items-center justify-center gap-2 rounded-2xl border font-semibold transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50",
+        variantClasses[variant],
+        sizeClasses[size],
         className
       )}
       disabled={disabled || isLoading}
       {...props}
     >
-      {isLoading && <Loader2 className="h-5 w-5 animate-spin" />}
-      {children}
+      {isLoading ? (
+        <>
+          <Spinner />
+          {loadingText || children}
+        </>
+      ) : (
+        children
+      )}
     </button>
   );
 };
