@@ -15,7 +15,7 @@ export type AccessMethod = "account" | "access_code";
 export interface LoginResponse {
   success: boolean;
   data: {
-    token: string;
+    accessToken: string;
     scanner: ScannerPayload;
   };
 }
@@ -27,9 +27,7 @@ export interface ValidateResponse {
 
 // Scan request/response
 export interface ScanRequest {
-  tokenId: string;
-  preimage: string;
-  version: number;
+  payload: string;
 }
 
 export type ScanResultType =

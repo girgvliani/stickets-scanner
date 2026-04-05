@@ -4,9 +4,9 @@ import { useState, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
 import type { IDetectedBarcode } from "@yudiel/react-qr-scanner";
 import { api } from "@/lib/api";
+import { HTTPError } from "ky";
 import { useAuthStore } from "@/stores/auth.store";
 import type {
-  QRCodeData,
   ScanResult,
   ScanResponse,
 } from "@/types/scanner.types";
@@ -43,39 +43,12 @@ const CameraScannerComponent = () => {
         lastScannedRef.current = null;
       }, 3000);
 
-      let qrData: QRCodeData;
-      try {
-        qrData = JSON.parse(code.rawValue);
-        if (!qrData.tokenId || !qrData.preimage) {
-          throw new Error("Missing fields");
-        }
-      } catch {
-        setScanResult({
-          result: "invalid",
-          reason: "Invalid QR code format",
-        });
-        return;
-      }
-
       setIsProcessing(true);
 
       try {
         const response = await api.post("scan", {
-          json: {
-            tokenId: qrData.tokenId,
-            preimage: qrData.preimage,
-            version: qrData.version || 1,
-          },
+          json: { payload: code.rawValue },
         });
-
-        if (!response.ok) {
-          const err = await response.json<{ message?: string }>();
-          setScanResult({
-            result: "invalid",
-            reason: err.message || "Scan failed",
-          });
-          return;
-        }
 
         const data = await response.json<ScanResponse>();
         setScanResult(data.data);
@@ -87,11 +60,21 @@ const CameraScannerComponent = () => {
         ) {
           setTimeout(() => setScanResult(null), 2000);
         }
-      } catch {
-        setScanResult({
-          result: "invalid",
-          reason: "Connection error. Please try again.",
-        });
+      } catch (err) {
+        if (err instanceof HTTPError) {
+          try {
+            const body = await err.response.json<{ error?: { message?: string }; message?: string }>();
+            const reason = body?.error?.message ?? body?.message ?? "Invalid ticket";
+            setScanResult({ result: "invalid", reason });
+          } catch {
+            setScanResult({ result: "invalid", reason: "Invalid ticket" });
+          }
+        } else {
+          setScanResult({
+            result: "invalid",
+            reason: "Connection error. Please try again.",
+          });
+        }
       } finally {
         setIsProcessing(false);
       }

@@ -59,7 +59,7 @@ const AccessCodeLoginComponent = () => {
       }
 
       const result = await response.json<LoginResponse>();
-      login(result.data.token, result.data.scanner);
+      login(result.data.accessToken, result.data.scanner);
       router.push("/scan");
     } catch {
       setError("Connection error. Please try again.");
