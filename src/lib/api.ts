@@ -1,7 +1,8 @@
 import ky from "ky";
 import { useAuthStore } from "@/stores/auth.store";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api/scanner";
+const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000").replace(/\/$/, "");
+const API_URL = `${BASE_URL}/api/scanner`;
 
 export const api = ky.create({
   prefixUrl: API_URL,
