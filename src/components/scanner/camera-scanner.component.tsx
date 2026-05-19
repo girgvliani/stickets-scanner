@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import type { IDetectedBarcode } from "@yudiel/react-qr-scanner";
 import { api } from "@/lib/api";
@@ -23,8 +23,6 @@ const CameraScannerComponent = () => {
   const scanner = useAuthStore((s) => s.scanner);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const lastScannedRef = useRef<string | null>(null);
-  const cooldownRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleScan = useCallback(
     async (detectedCodes: IDetectedBarcode[]) => {
@@ -32,16 +30,6 @@ const CameraScannerComponent = () => {
 
       const code = detectedCodes[0];
       if (!code?.rawValue) return;
-
-      // Prevent scanning same QR twice in a row
-      if (lastScannedRef.current === code.rawValue) return;
-      lastScannedRef.current = code.rawValue;
-
-      // Clear duplicate prevention after 3s
-      if (cooldownRef.current) clearTimeout(cooldownRef.current);
-      cooldownRef.current = setTimeout(() => {
-        lastScannedRef.current = null;
-      }, 3000);
 
       setIsProcessing(true);
 
@@ -84,7 +72,6 @@ const CameraScannerComponent = () => {
 
   const handleDismiss = useCallback(() => {
     setScanResult(null);
-    lastScannedRef.current = null;
   }, []);
 
   return (
