@@ -7,11 +7,12 @@ import type { ScannerPayload } from "@/types/scanner.types";
 interface AuthState {
   token: string | null;
   scanner: ScannerPayload | null;
+  accessCode: string | null;
   isAuthenticated: boolean;
 }
 
 interface AuthActions {
-  login: (token: string, scanner: ScannerPayload) => void;
+  login: (token: string, scanner: ScannerPayload, accessCode?: string) => void;
   logout: () => void;
   updateScanMode: (scanMode: ScannerPayload["scanMode"]) => void;
 }
@@ -21,6 +22,7 @@ type AuthStore = AuthState & AuthActions;
 const initialState: AuthState = {
   token: null,
   scanner: null,
+  accessCode: null,
   isAuthenticated: false,
 };
 
@@ -30,10 +32,11 @@ export const useAuthStore = create<AuthStore>()(
       (set) => ({
         ...initialState,
 
-        login: (token, scanner) =>
+        login: (token, scanner, accessCode) =>
           set({
             token,
             scanner,
+            accessCode: accessCode ?? null,
             isAuthenticated: true,
           }),
 

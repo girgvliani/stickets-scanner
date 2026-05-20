@@ -7,12 +7,15 @@ import { Text } from "@/components/ui/text";
 
 const ScannerHeaderComponent = () => {
   const scanner = useAuthStore((s) => s.scanner);
+  const accessCode = useAuthStore((s) => s.accessCode);
+
+  const displayName = scanner?.scannerName || accessCode || "Scanner";
 
   return (
     <header className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4 py-3 bg-gradient-to-b from-black/60 to-transparent">
       <div className="flex flex-col">
         <Text variant="h7" color="white">
-          {scanner?.scannerName || "Scanner"}
+          {displayName}
         </Text>
         <Text variant="p3" className="text-white/70">
           Event #{scanner?.eventId}

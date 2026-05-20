@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
 import type { IDetectedBarcode } from "@yudiel/react-qr-scanner";
 import { api } from "@/lib/api";
@@ -23,14 +23,16 @@ const CameraScannerComponent = () => {
   const scanner = useAuthStore((s) => s.scanner);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const isProcessingRef = useRef(false);
 
   const handleScan = useCallback(
     async (detectedCodes: IDetectedBarcode[]) => {
-      if (isProcessing || scanResult) return;
+      if (isProcessingRef.current || scanResult) return;
 
       const code = detectedCodes[0];
       if (!code?.rawValue) return;
 
+      isProcessingRef.current = true;
       setIsProcessing(true);
 
       try {
@@ -64,10 +66,11 @@ const CameraScannerComponent = () => {
           });
         }
       } finally {
+        isProcessingRef.current = false;
         setIsProcessing(false);
       }
     },
-    [isProcessing, scanResult, scanner?.scanMode]
+    [scanResult, scanner?.scanMode]
   );
 
   const handleDismiss = useCallback(() => {
